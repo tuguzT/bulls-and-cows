@@ -4,6 +4,7 @@ use std::io::Write;
 use std::error::Error;
 
 pub fn run() -> Result<(), Box<dyn Error>> {
+    let mut attempts_remaining: u8 = 4;
     println!("Hello there!\n\
         You're playing in the 'Bulls and Cows' game!\n\
         Let me tell you the rules:\n\
@@ -11,10 +12,9 @@ pub fn run() -> Result<(), Box<dyn Error>> {
         \t- and YOU, the player, must guess all numbers in it!\n\
         If the matching digits are in their right positions, they are called 'bulls', \
         but if in different positions, they are 'cows'.\n\
-        One important note: you have only 4 attempts to guess the number!");
+        One important note: you have only {} attempts to guess the number!", attempts_remaining);
     let secret_number = utils::generate_secret_number();
 
-    let mut attempts_remaining: u8 = 4;
     let mut user_input = String::new();
     while attempts_remaining > 0 {
         print!("\n{} attempts remaining. Enter your number: ", attempts_remaining);
@@ -28,10 +28,14 @@ pub fn run() -> Result<(), Box<dyn Error>> {
                 } else if user_number > 9_999 {
                     println!("Your number is too big! It must be 4-digit!");
                 } else {
-                    println!("Your number is: {}", user_number);
-                    let _cows = utils::cows(secret_number, user_number);
-                    let _bulls = utils::bulls(secret_number, user_number);
-                    attempts_remaining -= 1
+                    let cows = utils::cows(secret_number, user_number);
+                    let bulls = utils::bulls(secret_number, user_number);
+                    if bulls == 4 {
+                        println!("CONGRATULATIONS!!! You have guessed the secret number!");
+                        return Ok(())
+                    }
+                    println!("{} cows and {} bulls for now!", cows, bulls);
+                    attempts_remaining -= 1;
                 }
             }
             Err(_) => {
