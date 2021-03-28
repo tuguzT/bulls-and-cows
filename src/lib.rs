@@ -1,4 +1,5 @@
-use rand::Rng;
+mod utils;
+
 use std::io::Write;
 use std::error::Error;
 
@@ -11,7 +12,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
         If the matching digits are in their right positions, they are called 'bulls', \
         but if in different positions, they are 'cows'.\n\
         One important note: you have only 4 attempts to guess the number!");
-    let _secret_number = generate_secret_number();
+    let secret_number = utils::generate_secret_number();
 
     let mut attempts_remaining: u8 = 4;
     let mut user_input = String::new();
@@ -28,6 +29,8 @@ pub fn run() -> Result<(), Box<dyn Error>> {
                     println!("Your number is too big! It must be 4-digit!");
                 } else {
                     println!("Your number is: {}", user_number);
+                    let _cows = utils::cows(secret_number, user_number);
+                    let _bulls = utils::bulls(secret_number, user_number);
                     attempts_remaining -= 1
                 }
             }
@@ -38,23 +41,6 @@ pub fn run() -> Result<(), Box<dyn Error>> {
         user_input.clear();
     }
 
-    println!("\nSorry, but you have lost: you didn't guess a secret number!");
+    println!("\nSorry, but you have lost: you haven't guess a secret number!");
     Ok(())
-}
-
-fn generate_secret_number() -> u16 {
-    let mut rng = rand::thread_rng();
-    let mut array = [-1; 4];
-
-    array[0] = rng.gen_range(1..10);
-    let mut i: usize = 1;
-    while i < 4 {
-        let digit = rng.gen_range(0..10);
-        if !array.contains(&digit) {
-            array[i] = digit;
-            i += 1;
-        }
-    }
-
-    (array[0] * 1_000 + array[1] * 100 + array[2] * 10 + array[3]) as u16
 }
