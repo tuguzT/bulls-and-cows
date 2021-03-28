@@ -1,13 +1,18 @@
+//! This is a library of the **"Bulls and Cows"** game
+
 mod utils;
 
 use std::io::Write;
 use std::error::Error;
 
+/// Structure of game configuration
 pub struct Config {
+    /// Command line arguments passed to the game
     commands: Vec<String>,
 }
 
 impl Config {
+    /// Constructor of the Config object
     pub fn new() -> Self {
         let mut commands: Vec<String> = std::env::args().collect();
         commands.remove(0);
@@ -31,6 +36,7 @@ const HELP: &'static str = "'Bulls and Cows' game\n\
         \t--help            : shows all available options\n\
         \t--rules           : shows the rules of the game";
 
+/// The entry function of the library
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     if config.commands.is_empty() || config.commands[0] == "--help" {
         println!("{}", HELP);
@@ -60,6 +66,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+/// This is where the game logic implemented
 fn play(attempts: u8) -> Result<(), Box<dyn Error>> {
     let mut attempts_remaining = attempts;
     println!(

@@ -1,5 +1,8 @@
+//! This module has the utility functions for the game library
+
 use rand::Rng;
 
+/// Generates the 4-digit secret number (digits are unique in this number)
 pub fn generate_secret_number() -> u16 {
     let mut rng = rand::thread_rng();
 
@@ -18,6 +21,12 @@ pub fn generate_secret_number() -> u16 {
     from_digits(digits)
 }
 
+/// Returns the count of "cows" of the user provided number
+///
+/// # Arguments
+///
+/// * `secret_number` - secret number that was generated earlier
+/// * `user_number` - number provided by user
 pub fn cows(secret_number: u16, user_number: u16) -> u8 {
     let secret_number = to_digits(secret_number);
     let user_number = to_digits(user_number);
@@ -32,6 +41,12 @@ pub fn cows(secret_number: u16, user_number: u16) -> u8 {
     cows
 }
 
+/// Returns the count of "bulls" of the user provided number
+///
+/// # Arguments
+///
+/// * `secret_number` - secret number that was generated earlier
+/// * `user_number` - number provided by user
 pub fn bulls(secret_number: u16, user_number: u16) -> u8 {
     let secret_number = to_digits(secret_number);
     let user_number = to_digits(user_number);
@@ -46,6 +61,11 @@ pub fn bulls(secret_number: u16, user_number: u16) -> u8 {
     bulls
 }
 
+/// Converts a number into an array of digits
+///
+/// # Arguments
+///
+/// * `number` - 4-digit number that will be converted
 fn to_digits(number: u16) -> [u8; 4] {
     [
         (number / 1_000) as u8,
@@ -55,6 +75,11 @@ fn to_digits(number: u16) -> [u8; 4] {
     ]
 }
 
+/// Converts a an array of digits into a number
+///
+/// # Arguments
+///
+/// * `digits` - array of digits that will be converted
 fn from_digits(digits: [u8; 4]) -> u16 {
     (digits[0] as u16) * 1_000
         + (digits[1] as u16) * 100
@@ -62,6 +87,7 @@ fn from_digits(digits: [u8; 4]) -> u16 {
         + digits[3] as u16
 }
 
+/// Test module
 #[cfg(test)]
 mod tests {
     use super::*;
