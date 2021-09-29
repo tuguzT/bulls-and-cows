@@ -6,7 +6,7 @@ use rand::Rng;
 pub fn generate_secret_number() -> u16 {
     let mut rng = rand::thread_rng();
 
-    let mut digits = [u8::max_value(); 4];
+    let mut digits = [u8::MAX; 4];
     digits[0] = rng.gen_range(1..10);
 
     let mut i: usize = 1;

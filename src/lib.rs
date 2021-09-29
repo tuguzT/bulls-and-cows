@@ -2,8 +2,8 @@
 
 mod utils;
 
-use std::io::Write;
 use std::error::Error;
+use std::io::Write;
 
 /// Structure of game configuration
 pub struct Config {
@@ -17,9 +17,7 @@ impl Config {
         let mut commands: Vec<String> = std::env::args().collect();
         commands.remove(0);
 
-        Self {
-            commands,
-        }
+        Self { commands }
     }
 }
 
@@ -45,19 +43,21 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
         let attempts: u8 = match attempts_raw {
             None => 4,
             Some(attempts_raw) => match attempts_raw.parse::<u8>() {
-                Ok(attempts) => if attempts >= 4 {
-                    attempts
-                } else {
-                    eprintln!("Count of attempts mustn't be less than 4!");
-                    return Ok(())
-                },
+                Ok(attempts) => {
+                    if attempts >= 4 {
+                        attempts
+                    } else {
+                        eprintln!("Count of attempts mustn't be less than 4!");
+                        return Ok(());
+                    }
+                }
                 Err(_) => {
                     eprintln!("Count of attempts must be positive number!");
-                    return Ok(())
+                    return Ok(());
                 }
-            }
+            },
         };
-        return play(attempts)
+        return play(attempts);
     } else if config.commands[0] == "--rules" {
         println!("{}", RULES);
     } else {
@@ -79,7 +79,10 @@ fn play(attempts: u8) -> Result<(), Box<dyn Error>> {
 
     let mut user_input = String::new();
     while attempts_remaining > 0 {
-        print!("\n{} attempts remaining. Enter your number: ", attempts_remaining);
+        print!(
+            "\n{} attempts remaining. Enter your number: ",
+            attempts_remaining
+        );
         std::io::stdout().flush()?;
         std::io::stdin().read_line(&mut user_input)?;
         let user_number = user_input.trim().parse::<u16>();
@@ -94,7 +97,7 @@ fn play(attempts: u8) -> Result<(), Box<dyn Error>> {
                     let bulls = utils::bulls(secret_number, user_number);
                     if bulls == 4 {
                         println!("CONGRATULATIONS!!! You have guessed the secret number!");
-                        return Ok(())
+                        return Ok(());
                     }
                     println!("{} cows and {} bulls for now!", cows, bulls);
                     attempts_remaining -= 1;
